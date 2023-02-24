@@ -7,37 +7,69 @@ let caseOccupied = (cases) => {
         if (element.style.backgroundImage.includes('https://www.chess.com/chess-themes/pieces/neo/150/w')){
             element.classList.add('whiteOccupied')
             element.classList.remove('blackOccupied', 'free')
+            colorCases(element)
         }
         else if (element.style.backgroundImage.includes('https://www.chess.com/chess-themes/pieces/neo/150/b')){
             element.classList.add('blackOccupied')
             element.classList.remove('whiteOccupied', 'free')
+            colorCases(element)
         }
         else{
             element.classList.add('free')
-            element.classList.remove('whiteOccupied', 'blackOccupied')
+            element.classList.remove('whiteOccupied', 'blackOccupied', 'pawn', 'rook', 'knight', 'bishop', 'queen', 'king')
         }
     });
+
+    
 }
 
+let colorCases = (element) => {
+    let bgImg = element.style.backgroundImage
+    if(bgImg.includes(white.pawn) || bgImg.includes(black.pawn)){
+        element.classList.add('pawn')
+        element.classList.remove('rook', 'knight', 'bishop', 'queen', 'king')
+    }
+    else if(bgImg.includes(white.rook) || bgImg.includes(black.rook)){
+        element.classList.add('rook')
+        element.classList.remove('pawn', 'knight', 'bishop', 'queen', 'king')
+    }
+    else if(bgImg.includes(white.knight) || bgImg.includes(black.knight)){
+        element.classList.add('knight')
+        element.classList.remove('pawn', 'rook', 'bishop', 'queen', 'king')
+    }
+    else if(bgImg.includes(white.bishop) || bgImg.includes(black.bishop)){
+        element.classList.add('bishop')
+        element.classList.remove('pawn', 'rook', 'knight', 'queen', 'king')
+    }
+    else if(bgImg.includes(white.queen) || bgImg.includes(black.queen)){
+        element.classList.add('queen')
+        element.classList.remove('pawn', 'rook', 'knight', 'bishop', 'king')
+    }
+    else if(bgImg.includes(white.king) || bgImg.includes(black.king)){
+        element.classList.add('king')
+        element.classList.remove('pawn', 'rook', 'knight', 'bishop', 'queen')
+    }
+    
 
+}
 let initalization = () => {
     const letter = ['a','b','c','d','e','f','g','h']
     
-    for (let index = 0; index < 8; index++) {
-        let row = document.createElement('div')
-        row.className = `row`
-        game.append(row)
-        for (let i = 0; i < 8 ; i++) {
+    for (let row = 0; row < 8; row++) {
+        let ligne = document.createElement('div')
+        ligne.className = `row`
+        game.append(ligne)
+        for (let col = 0; col < 8 ; col++) {
             let column = document.createElement('div')
-            if ((index % 2 === 0 && i % 2 === 0) || (index % 2 != 0 && i % 2 != 0)){
-                column.className = `cases _${index + 1}${i + 1}`
+            console.log(row, col);
+            column.className = `cases _${row * 8 + col}`
+            if ((row % 2 === 0 && col % 2 === 0) || (row % 2 != 0 && col % 2 != 0)){
                 column.style.backgroundColor = '#769656'
             }
             else{
-                column.className = `cases _${index + 1}${i + 1}`
                 column.style.backgroundColor = '#eeeed2'
             }
-            row.append(column)
+            ligne.append(column)
         }
     }
     
@@ -59,20 +91,14 @@ let initalization = () => {
     }
 
     caseOccupied(cases)
+
 }
 
 
 
-let move = (start, end) => {
-    end.style.backgroundImage = start.style.backgroundImage
-    start.style.backgroundImage = ''
 
-    // redetectage des cases libres et occupe
-    let cases = document.querySelectorAll('.cases')
-    caseOccupied(cases)
-}
 
-let foo = (color) => {
+let move = (color) => {
 
     let wOccupied = document.querySelectorAll('.whiteOccupied')
     let bOccupied = document.querySelectorAll('.blackOccupied')
@@ -82,9 +108,7 @@ let foo = (color) => {
     function listenerOccupiedElements() {
         wOccupied.forEach(elementOccupied => {
             elementOccupied.addEventListener('click', () => {
-                console.log('dd', elementOccupied);
                 if (elementOccupied.classList[2] !== 'free') {
-                    
                     selectedElement = elementOccupied
                 }
                 free.forEach(freeElement => {
@@ -97,11 +121,13 @@ let foo = (color) => {
         free.forEach(freeElement => {
             freeElement.removeEventListener('click', freeElementClickHandler)
         })
-        move(selectedElement, this)
-        console.log('move');
+        this.style.backgroundImage = selectedElement.style.backgroundImage
+        selectedElement.style.backgroundImage = ''
+        // redetectage des cases libres et occuper
+        cases = document.querySelectorAll('.cases')
+        caseOccupied(cases)
         wOccupied = document.querySelectorAll('.whiteOccupied')
         free = document.querySelectorAll('.free')
-        console.log('ici');
         listenerOccupiedElements()
     }
     let selectedElement = null
@@ -109,83 +135,31 @@ let foo = (color) => {
     listenerOccupiedElements()
 }
 
+let legalMove = (element) => {
+    let free = document.querySelectorAll('.free')
+    let cases = document.querySelectorAll('.cases')
+
+    casesPos = cases.classList[1]
+
+    white = element.classList[2] === 'whiteOccupied'
+    black = element.classList[2] === 'blackOccupied'
+
+    pawn = element.classList[3] === 'pawn'
+    rook = element.classList[3] === 'rook'
+    knight = element.classList[3] === 'knight'
+    bishop = element.classList[3] === 'bishop'
+    queen = element.classList[3] === 'queen'
+    king = element.classList[3] === 'king'
+
+
+    if(white && pawn){
+
+    }
+}
+
 
 initalization()
-foo('white')
+move('white')
 
 
 
-
-// let move = () => {
-//     let cases = document.querySelectorAll('.cases')
-
-    
-//     let occupied = document.querySelectorAll('.occupied')
-//     let compteur = 0
-//     let compteur2 = 0
-//     let start;
-//     let target;
-
-        
-//     occupied.forEach(occupiedElement => {
-//         occupiedElement.addEventListener('click', () => {
-//             cases = document.querySelectorAll('.cases')
-//             caseOccupied(cases)
-//             if (compteur != 1) {
-//                 compteur2 = 0
-//                 start = occupiedElement
-//                 compteur = 1
-//                 console.log('hey');
-//                 cases.forEach(element =>{
-//                     element.addEventListener('click',() => {
-//                         if (compteur2 != 1 && element.classList[3] == 'free'){
-//                             console.log('salut', compteur, compteur2);
-//                             target = element
-//                             compteur2 = 1
-//                             compteur = 0
-//                             target.style.backgroundImage = start.style.backgroundImage
-//                             start.style.backgroundImage = ''
-//                             console.log('salut2', compteur, compteur2);
-//                             // Callback function
-//                             resetListener();
-//                         }
-//                     })
-//                 })
-//             }
-//         })
-//     });
-
-//     // Callback function
-//     function resetListener(){
-//         cases = document.querySelectorAll('.cases')
-//         caseOccupied(cases)
-//         occupied = document.querySelectorAll('.occupied')
-//         occupied.forEach(occupiedElement => {
-//             occupiedElement.addEventListener('click', () => {
-//                 cases = document.querySelectorAll('.cases')
-//                 caseOccupied(cases)
-//                 if (compteur != 1) {
-//                     compteur2 = 0
-//                     start = occupiedElement
-//                     compteur = 1
-//                     console.log('hey');
-//                     cases.forEach(element =>{
-//                         element.addEventListener('click',() => {
-//                             if (compteur2 != 1 && element.classList[3] == 'free'){
-//                                 console.log('salut', compteur, compteur2);
-//                                 target = element
-//                                 compteur2 = 1
-//                                 target.style.backgroundImage = start.style.backgroundImage
-//                                 start.style.backgroundImage = ''
-//                                 compteur = 0
-//                                 console.log('salut2', compteur, compteur2);
-//                                 // Callback function
-//                                 resetListener();
-//                             }
-//                         })
-//                     })
-//                 }
-//             })
-//         });
-//     };
-// }
