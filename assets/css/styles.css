@@ -39,3 +39,8 @@
 {
     cursor: pointer;
 }
+
+.possibleMove 
+{
+    border: 3px solid black;
+}
