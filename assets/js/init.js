@@ -20,7 +20,6 @@ let caseOccupied = (cases) => {
         }
     });
 
-    
 }
 
 let colorCases = (element) => {
@@ -53,7 +52,6 @@ let colorCases = (element) => {
 
 }
 let initalization = () => {
-    const letter = ['a','b','c','d','e','f','g','h']
     
     for (let row = 0; row < 8; row++) {
         let ligne = document.createElement('div')
@@ -61,7 +59,6 @@ let initalization = () => {
         game.append(ligne)
         for (let col = 0; col < 8 ; col++) {
             let column = document.createElement('div')
-            console.log(row, col);
             column.className = `cases _${row * 8 + col}`
             if ((row % 2 === 0 && col % 2 === 0) || (row % 2 != 0 && col % 2 != 0)){
                 column.style.backgroundColor = '#769656'
