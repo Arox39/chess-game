@@ -107,6 +107,7 @@ let move = (color) => {
             elementOccupied.addEventListener('click', () => {
                 if (elementOccupied.classList[2] !== 'free') {
                     selectedElement = elementOccupied
+                    possibleMoveForWhitePawns(selectedElement.classList[1], cases)
                 }
                 free.forEach(freeElement => {
                     freeElement.addEventListener('click', freeElementClickHandler)
@@ -118,6 +119,7 @@ let move = (color) => {
         free.forEach(freeElement => {
             freeElement.removeEventListener('click', freeElementClickHandler)
         })
+        // le deplacement de la piece
         this.style.backgroundImage = selectedElement.style.backgroundImage
         selectedElement.style.backgroundImage = ''
         // redetectage des cases libres et occuper
@@ -132,31 +134,71 @@ let move = (color) => {
     listenerOccupiedElements()
 }
 
-let legalMove = (element) => {
-    let free = document.querySelectorAll('.free')
-    let cases = document.querySelectorAll('.cases')
 
-    casesPos = cases.classList[1]
+let caseeToRowCol = (casee) => {
+    casee = casee.substr(1)
+    let row = Math.floor(casee/8)
+    let col = casee - row * 8
 
-    white = element.classList[2] === 'whiteOccupied'
-    black = element.classList[2] === 'blackOccupied'
+    // on met row et col a indice 'humain' (1ere ligne = 1 pas 0)
+    row++
+    col++
+    return {row, col}
+}
 
-    pawn = element.classList[3] === 'pawn'
-    rook = element.classList[3] === 'rook'
-    knight = element.classList[3] === 'knight'
-    bishop = element.classList[3] === 'bishop'
-    queen = element.classList[3] === 'queen'
-    king = element.classList[3] === 'king'
+let rowColToCasee = (row, col) =>{
+    let casee = ( row - 1 ) * 8 + col - 1
+    return `_${casee}` 
+}
 
-
-    if(white && pawn){
-
+let possibleMoveForWhitePawns = (casee, cases) => {
+    cases.forEach(element => {
+        element.classList.remove('possibleMove')
+    })
+    let select = (casee) => document.querySelector(`.${casee}`)
+    let { row, col } = caseeToRowCol(casee)
+    let moves = []
+    if(select(rowColToCasee(row + 1, col)).classList[2] === 'free'){
+        moves.push([rowColToCasee(row + 1, col)])
+        select(rowColToCasee(row + 1, col)).classList.add('possibleMove')
     }
+    if(row === 2 && select(rowColToCasee(row + 2, col)).classList[2] === 'free'){
+        moves.push([rowColToCasee(row + 2, col)])
+        select(rowColToCasee(row + 2, col)).classList.add('possibleMove')
+    }
+    if(col !== 0 && select(rowColToCasee(row + 1, col - 1)).classList[2] === 'blackOccupied'){
+        moves.push([rowColToCasee(row + 1, col - 1)])
+        select(rowColToCasee(row + 1, col - 1)).classList.add('possibleMove')
+    }
+    if(col !== 9 && select(rowColToCasee(row + 1, col + 1)).classList[2] === 'blackOccupied'){
+        moves.push([rowColToCasee(row + 1, col + 1)])
+        select(rowColToCasee(row + 1, col + 1)).classList.add('possibleMove')
+    }
+    return moves
 }
 
 
 initalization()
 move('white')
 
+// let legalMove = (element) => {
+//     let free = document.querySelectorAll('.free')
+//     let cases = document.querySelectorAll('.cases')
+
+//     casesPos = cases.classList[1]
+
+//     white = element.classList[2] === 'whiteOccupied'
+//     black = element.classList[2] === 'blackOccupied'
+
+//     pawn = element.classList[3] === 'pawn'
+//     rook = element.classList[3] === 'rook'
+//     knight = element.classList[3] === 'knight'
+//     bishop = element.classList[3] === 'bishop'
+//     queen = element.classList[3] === 'queen'
+//     king = element.classList[3] === 'king'
 
 
+//     if(white && pawn){
+
+//     }
+// }
