@@ -1,29 +1,43 @@
-
 const game = document.querySelector(".game")
 const container = document.querySelector('.container')
 
 let caseOccupied = (cases) => {
+    // Fonction qui vérifie si chaque case passée en paramètre est occupée par une pièce
+
+    // Pour chaque case, on vérifie si elle est occupée par une pièce blanche, noire ou libre
     cases.forEach(element => {
+        // Si la case est occupée par une pièce blanche, on ajoute la classe "whiteOccupied" et on enlève les classes "blackOccupied" et "free"
         if (element.style.backgroundImage.includes('https://www.chess.com/chess-themes/pieces/neo/150/w')){
             element.classList.add('whiteOccupied')
             element.classList.remove('blackOccupied', 'free')
+
+            // On appelle la fonction "colorCases" qui va colorer la case en fonction de son index et de sa classe
             colorCases(element)
         }
+        
+        // Si la case est occupée par une pièce noire, on ajoute la classe "blackOccupied" et on enlève les classes "whiteOccupied" et "free"
         else if (element.style.backgroundImage.includes('https://www.chess.com/chess-themes/pieces/neo/150/b')){
             element.classList.add('blackOccupied')
             element.classList.remove('whiteOccupied', 'free')
+
+            // On appelle la fonction "colorCases" qui va colorer la case en fonction de son index et de sa classe
             colorCases(element)
         }
+        
+        // Si la case est libre, on ajoute la classe "free" et on enlève toutes les autres classes qui pourraient être présentes
         else{
             element.classList.add('free')
             element.classList.remove('whiteOccupied', 'blackOccupied', 'pawn', 'rook', 'knight', 'bishop', 'queen', 'king')
         }
     });
-
-    
-}
+}   
 
 let colorCases = (element) => {
+    /**
+    Cette fonction prend en paramètre un élément DOM représentant une case du jeu d'échecs,
+    et attribue une classe CSS en fonction de la pièce qui occupe la case.
+    @param {HTMLElement} element - L'élément DOM représentant la case à colorer.
+    */
     let bgImg = element.style.backgroundImage
     if(bgImg.includes(white.pawn) || bgImg.includes(black.pawn)){
         element.classList.add('pawn')
@@ -53,24 +67,30 @@ let colorCases = (element) => {
 
 }
 let initalization = () => {
-    const letter = ['a','b','c','d','e','f','g','h']
-    
+    /**
+    La fonction initialization crée une grille d'échecs en générant des éléments div pour chaque
+    case de la grille et en les plaçant dans des éléments de rangée (div également).
+    Les cases sont coloriées avec une alternance de couleurs pour les cases noires et blanches.
+    */
+    const letter = ['a','b','c','d','e','f','g','h'] // les lettres pour les colonnes
+
     for (let row = 0; row < 8; row++) {
-        let ligne = document.createElement('div')
-        ligne.className = `row`
-        game.append(ligne)
+        let ligne = document.createElement('div') // création d'une div pour chaque ligne
+        ligne.className = `row` // ajout de la classe 'row' à la div
+        game.append(ligne) // ajout de la ligne à la div principale 'game'
         for (let col = 0; col < 8 ; col++) {
-            let column = document.createElement('div')
-            column.className = `cases _${row * 8 + col}`
-            if ((row % 2 === 0 && col % 2 === 0) || (row % 2 != 0 && col % 2 != 0)){
-                column.style.backgroundColor = '#769656'
+            let column = document.createElement('div') // création d'une div pour chaque case
+            column.className = `cases _${row * 8 + col}` // ajout de la classe 'cases' avec le numéro correspondant à la case
+            if ((row % 2 === 0 && col % 2 === 0) || (row % 2 != 0 && col % 2 != 0)){ // alternance des couleurs pour les cases
+                column.style.backgroundColor = '#769656' // couleur vert foncé pour les cases de couleur
             }
             else{
-                column.style.backgroundColor = '#eeeed2'
+                column.style.backgroundColor = '#eeeed2' // couleur crème pour les cases blanches
             }
-            ligne.append(column)
+            ligne.append(column) // ajout de la case à la ligne
         }
     }
+
     
     container.append(game)
 
@@ -99,40 +119,54 @@ let initalization = () => {
 
 let move = (color) => {
 
+    // Sélectionne tous les éléments occupés par les pièces blanches et noires
     let wOccupied = document.querySelectorAll('.whiteOccupied')
     let bOccupied = document.querySelectorAll('.blackOccupied')
+    // Sélectionne toutes les cases
     let cases = document.querySelectorAll('.cases')
+    // Sélectionne toutes les cases qui sont vides
     let free = document.querySelectorAll('.free')
 
+    // Fonction qui "écoute" les clics sur les éléments occupés par les pièces blanches
     function listenerOccupiedElements() {
         wOccupied.forEach(elementOccupied => {
+            // Ajoute un événement "click" sur l'élément occupé
             elementOccupied.addEventListener('click', () => {
+                // Vérifie si la classe "free" n'est pas présente dans les classes de l'élément occupé
                 if (elementOccupied.classList[2] !== 'free') {
+                    // Si c'est le cas, cet élément est considéré comme la pièce sélectionnée pour le déplacement
                     selectedElement = elementOccupied
                     possibleMoveForWhitePawns(selectedElement.classList[1], cases)
                 }
+                // Ajoute un événement "click" sur toutes les cases vides
                 free.forEach(freeElement => {
                     freeElement.addEventListener('click', freeElementClickHandler)
                 })
             })
         })
     }
+
+    // Fonction qui gère le clic sur une case vide
     function freeElementClickHandler() {
+        // Supprime l'écouteur "click" de toutes les cases vides
         free.forEach(freeElement => {
             freeElement.removeEventListener('click', freeElementClickHandler)
         })
-        // le deplacement de la piece
+        // Déplace la pièce sélectionnée sur la case vide cliquée
         this.style.backgroundImage = selectedElement.style.backgroundImage
         selectedElement.style.backgroundImage = ''
-        // redetectage des cases libres et occuper
+        // Met à jour la liste des cases occupées et libres
         cases = document.querySelectorAll('.cases')
         caseOccupied(cases)
         wOccupied = document.querySelectorAll('.whiteOccupied')
         free = document.querySelectorAll('.free')
+        // Réactive l'écouteur "click" sur les éléments occupés par les pièces blanches
         listenerOccupiedElements()
     }
+
     let selectedElement = null
 
+    // Démarre l'écouteur "click" sur les éléments occupés par les pièces blanches
     listenerOccupiedElements()
 }
 
