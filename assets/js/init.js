@@ -74,9 +74,9 @@ let initalization = () => {
 
     // Positionnement des pieces de bases
     let cases = document.querySelectorAll('.cases');
-    let imagesW = [white.rook, white.bishop, white.knight, white.queen, white.king,
+    let imagesW = [white.rook, white.knight, white.bishop, white.queen, white.king,
     white.bishop, white.knight, white.rook];
-    let imagesB = [black.rook, black.bishop, black.knight, black.king, black.queen, 
+    let imagesB = [black.rook, black.knight, black.bishop, black.king, black.queen, 
     black.bishop, black.knight, black.rook];
     for (let i = 0; i < 8; i++) {
         cases[i].style.backgroundImage = `url(${imagesW[i]})`;
@@ -107,31 +107,54 @@ let move = (color) => {
             elementOccupied.addEventListener('click', () => {
                 if (elementOccupied.classList[2] !== 'free') {
                     selectedElement = elementOccupied
-                    possibleMoveForWhitePawns(selectedElement.classList[1], cases)
+                    verification(selectedElement)
+                    legalMove(selectedElement.classList[1], cases, 'white', selectedElement.classList[3])
                 }
-                free.forEach(freeElement => {
-                    freeElement.addEventListener('click', freeElementClickHandler)
+                let possibleMove = document.querySelectorAll('.possibleMove')
+                elementTemp = []
+                possibleMove.forEach(possibleElement => {
+                    elementTemp.push(possibleElement)
+                    possibleElement.addEventListener('click', possibleElementClickHandler)
                 })
             })
         })
     }
-    function freeElementClickHandler() {
-        free.forEach(freeElement => {
-            freeElement.removeEventListener('click', freeElementClickHandler)
+    function possibleElementClickHandler() {
+        let possibleMove = document.querySelectorAll('.possibleMoves')
+        // on retire le listener de la case qu'on vient de bouger, pour revenir en haut de la
+        // fonction
+        elementTemp.forEach(tempElement => {
+            tempElement.removeEventListener('click', possibleElementClickHandler)
         })
+
         // le deplacement de la piece
         this.style.backgroundImage = selectedElement.style.backgroundImage
         selectedElement.style.backgroundImage = ''
+        // enlevage des possibles mouvements
+        cases.forEach(element => {
+            element.classList.remove('possibleMove')
+       })
         // redetectage des cases libres et occuper
         cases = document.querySelectorAll('.cases')
         caseOccupied(cases)
         wOccupied = document.querySelectorAll('.whiteOccupied')
-        free = document.querySelectorAll('.free')
+        possibleMove = document.querySelectorAll('.possibleMove')
         listenerOccupiedElements()
     }
     let selectedElement = null
-
+    let elementTemp = []
     listenerOccupiedElements()
+}
+
+let verification = (element) => {
+    // permet de regler le bug de quand un pion arrive sur la 7eme ligne whiteOccupied et pawn sont 
+    // inverser 
+    if (element.classList[2] !== 'free'){
+        if (element.classList[3] !== 'pawn'){
+            element.classList.remove('pawn')
+            element.classList.add('pawn')
+        }
+    }
 }
 
 
@@ -152,7 +175,8 @@ let rowColToCasee = (row, col) =>{
 }
 
 let possibleMoveForWhitePawns = (casee, cases) => {
-    cases.forEach(element => {
+       // enlevage des possibles mouvements
+       cases.forEach(element => {
         element.classList.remove('possibleMove')
     })
     let select = (casee) => document.querySelector(`.${casee}`)
@@ -176,6 +200,7 @@ let possibleMoveForWhitePawns = (casee, cases) => {
     }
     return moves
 }
+
 
 
 initalization()
