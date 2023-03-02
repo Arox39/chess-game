@@ -1,4 +1,3 @@
-
 const game = document.querySelector(".game")
 const container = document.querySelector('.container')
 
@@ -119,14 +118,19 @@ let initalization = () => {
 
 let move = (color) => {
 
+    // Sélectionne tous les éléments occupés par les pièces blanches et noires
     let wOccupied = document.querySelectorAll('.whiteOccupied')
     let cases = document.querySelectorAll('.cases')
 
 
+    // Fonction qui "écoute" les clics sur les éléments occupés par les pièces blanches
     function listenerOccupiedElements() {
         wOccupied.forEach(elementOccupied => {
+            // Ajoute un événement "click" sur l'élément occupé
             elementOccupied.addEventListener('click', () => {
+                // Vérifie si la classe "free" n'est pas présente dans les classes de l'élément occupé
                 if (elementOccupied.classList[2] !== 'free') {
+                    // Si c'est le cas, cet élément est considéré comme la pièce sélectionnée pour le déplacement
                     selectedElement = elementOccupied
                     verification(selectedElement)
                     legalMove(selectedElement.classList[1], cases, 'white', selectedElement.classList[3])
@@ -162,6 +166,7 @@ let move = (color) => {
         possibleMove = document.querySelectorAll('.possibleMove')
         listenerOccupiedElements()
     }
+
     let selectedElement = null
     let elementTemp = []
     listenerOccupiedElements()
