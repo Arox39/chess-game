@@ -3,26 +3,42 @@ const game = document.querySelector(".game")
 const container = document.querySelector('.container')
 
 let caseOccupied = (cases) => {
+    // Fonction qui vérifie si chaque case passée en paramètre est occupée par une pièce
+
+    // Pour chaque case, on vérifie si elle est occupée par une pièce blanche, noire ou libre
     cases.forEach(element => {
+        // Si la case est occupée par une pièce blanche, on ajoute la classe "whiteOccupied" et on enlève les classes "blackOccupied" et "free"
         if (element.style.backgroundImage.includes('https://www.chess.com/chess-themes/pieces/neo/150/w')){
             element.classList.add('whiteOccupied')
             element.classList.remove('blackOccupied', 'free')
+
+            // On appelle la fonction "colorCases" qui va colorer la case en fonction de son index et de sa classe
             colorCases(element)
         }
+        
+        // Si la case est occupée par une pièce noire, on ajoute la classe "blackOccupied" et on enlève les classes "whiteOccupied" et "free"
         else if (element.style.backgroundImage.includes('https://www.chess.com/chess-themes/pieces/neo/150/b')){
             element.classList.add('blackOccupied')
             element.classList.remove('whiteOccupied', 'free')
+
+            // On appelle la fonction "colorCases" qui va colorer la case en fonction de son index et de sa classe
             colorCases(element)
         }
+        
+        // Si la case est libre, on ajoute la classe "free" et on enlève toutes les autres classes qui pourraient être présentes
         else{
             element.classList.add('free')
             element.classList.remove('whiteOccupied', 'blackOccupied', 'pawn', 'rook', 'knight', 'bishop', 'queen', 'king')
         }
     });
-
-}
+}   
 
 let colorCases = (element) => {
+    /**
+    Cette fonction prend en paramètre un élément DOM représentant une case du jeu d'échecs,
+    et attribue une classe CSS en fonction de la pièce qui occupe la case.
+    @param {HTMLElement} element - L'élément DOM représentant la case à colorer.
+    */
     let bgImg = element.style.backgroundImage
     if(bgImg.includes(white.pawn) || bgImg.includes(black.pawn)){
         element.classList.add('pawn')
@@ -52,31 +68,38 @@ let colorCases = (element) => {
 
 }
 let initalization = () => {
-    
+    /**
+    La fonction initialization crée une grille d'échecs en générant des éléments div pour chaque
+    case de la grille et en les plaçant dans des éléments de rangée (div également).
+    Les cases sont coloriées avec une alternance de couleurs pour les cases noires et blanches.
+    */
+    const letter = ['a','b','c','d','e','f','g','h'] // les lettres pour les colonnes
+
     for (let row = 0; row < 8; row++) {
-        let ligne = document.createElement('div')
-        ligne.className = `row`
-        game.append(ligne)
+        let ligne = document.createElement('div') // création d'une div pour chaque ligne
+        ligne.className = `row` // ajout de la classe 'row' à la div
+        game.append(ligne) // ajout de la ligne à la div principale 'game'
         for (let col = 0; col < 8 ; col++) {
-            let column = document.createElement('div')
-            column.className = `cases _${row * 8 + col}`
-            if ((row % 2 === 0 && col % 2 === 0) || (row % 2 != 0 && col % 2 != 0)){
-                column.style.backgroundColor = '#769656'
+            let column = document.createElement('div') // création d'une div pour chaque case
+            column.className = `cases _${row * 8 + col}` // ajout de la classe 'cases' avec le numéro correspondant à la case
+            if ((row % 2 === 0 && col % 2 === 0) || (row % 2 != 0 && col % 2 != 0)){ // alternance des couleurs pour les cases
+                column.style.backgroundColor = '#769656' // couleur vert foncé pour les cases de couleur
             }
             else{
-                column.style.backgroundColor = '#eeeed2'
+                column.style.backgroundColor = '#eeeed2' // couleur crème pour les cases blanches
             }
-            ligne.append(column)
+            ligne.append(column) // ajout de la case à la ligne
         }
     }
+
     
     container.append(game)
 
     // Positionnement des pieces de bases
     let cases = document.querySelectorAll('.cases');
-    let imagesW = [white.rook, white.knight, white.bishop, white.queen, white.king,
+    let imagesW = [white.rook, white.bishop, white.knight, white.queen, white.king,
     white.bishop, white.knight, white.rook];
-    let imagesB = [black.rook, black.knight, black.bishop, black.king, black.queen, 
+    let imagesB = [black.rook, black.bishop, black.knight, black.king, black.queen, 
     black.bishop, black.knight, black.rook];
     for (let i = 0; i < 8; i++) {
         cases[i].style.backgroundImage = `url(${imagesW[i]})`;
@@ -94,13 +117,11 @@ let initalization = () => {
 
 
 
-
 let move = (color) => {
 
     let wOccupied = document.querySelectorAll('.whiteOccupied')
-    let bOccupied = document.querySelectorAll('.blackOccupied')
     let cases = document.querySelectorAll('.cases')
-    let free = document.querySelectorAll('.free')
+
 
     function listenerOccupiedElements() {
         wOccupied.forEach(elementOccupied => {
