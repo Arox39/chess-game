@@ -175,81 +175,16 @@ let move = (color) => {
 let verification = (element) => {
     // permet de regler le bug de quand un pion arrive sur la 7eme ligne whiteOccupied et pawn sont 
     // inverser 
-    if (element.classList[2] !== 'free'){
-        if (element.classList[3] !== 'pawn'){
-            element.classList.remove('pawn')
-            element.classList.add('pawn')
-        }
-    }
-}
 
+    let state = element.classList[2]
 
-let caseeToRowCol = (casee) => {
-    casee = casee.substr(1)
-    let row = Math.floor(casee/8)
-    let col = casee - row * 8
-
-    // on met row et col a indice 'humain' (1ere ligne = 1 pas 0)
-    row++
-    col++
-    return {row, col}
-}
-
-let rowColToCasee = (row, col) =>{
-    let casee = ( row - 1 ) * 8 + col - 1
-    return `_${casee}` 
-}
-
-let possibleMoveForWhitePawns = (casee, cases) => {
-       // enlevage des possibles mouvements
-       cases.forEach(element => {
-        element.classList.remove('possibleMove')
-    })
-    let select = (casee) => document.querySelector(`.${casee}`)
-    let { row, col } = caseeToRowCol(casee)
-    let moves = []
-    if(select(rowColToCasee(row + 1, col)).classList[2] === 'free'){
-        moves.push([rowColToCasee(row + 1, col)])
-        select(rowColToCasee(row + 1, col)).classList.add('possibleMove')
+    if (state !== 'free' && state !== 'whiteOccupied' && state !== 'blackOccupied'){
+        element.classList.remove(state)
+        element.classList.add(state)
     }
-    if(row === 2 && select(rowColToCasee(row + 2, col)).classList[2] === 'free'){
-        moves.push([rowColToCasee(row + 2, col)])
-        select(rowColToCasee(row + 2, col)).classList.add('possibleMove')
-    }
-    if(col !== 0 && select(rowColToCasee(row + 1, col - 1)).classList[2] === 'blackOccupied'){
-        moves.push([rowColToCasee(row + 1, col - 1)])
-        select(rowColToCasee(row + 1, col - 1)).classList.add('possibleMove')
-    }
-    if(col !== 9 && select(rowColToCasee(row + 1, col + 1)).classList[2] === 'blackOccupied'){
-        moves.push([rowColToCasee(row + 1, col + 1)])
-        select(rowColToCasee(row + 1, col + 1)).classList.add('possibleMove')
-    }
-    return moves
 }
 
 
 
 initalization()
 move('white')
-
-// let legalMove = (element) => {
-//     let free = document.querySelectorAll('.free')
-//     let cases = document.querySelectorAll('.cases')
-
-//     casesPos = cases.classList[1]
-
-//     white = element.classList[2] === 'whiteOccupied'
-//     black = element.classList[2] === 'blackOccupied'
-
-//     pawn = element.classList[3] === 'pawn'
-//     rook = element.classList[3] === 'rook'
-//     knight = element.classList[3] === 'knight'
-//     bishop = element.classList[3] === 'bishop'
-//     queen = element.classList[3] === 'queen'
-//     king = element.classList[3] === 'king'
-
-
-//     if(white && pawn){
-
-//     }
-// }
