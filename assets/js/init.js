@@ -96,9 +96,9 @@ let initalization = () => {
 
     // Positionnement des pieces de bases
     let cases = document.querySelectorAll('.cases');
-    let imagesW = [white.rook, white.bishop, white.knight, white.queen, white.king,
+    let imagesW = [white.rook,  white.knight, white.bishop, white.queen, white.king,
     white.bishop, white.knight, white.rook];
-    let imagesB = [black.rook, black.bishop, black.knight, black.king, black.queen, 
+    let imagesB = [black.rook, black.knight, black.bishop, black.king, black.queen, 
     black.bishop, black.knight, black.rook];
     for (let i = 0; i < 8; i++) {
         cases[i].style.backgroundImage = `url(${imagesW[i]})`;
@@ -133,7 +133,8 @@ let move = (color) => {
                     // Si c'est le cas, cet élément est considéré comme la pièce sélectionnée pour le déplacement
                     selectedElement = elementOccupied
                     verification(selectedElement)
-                    legalMove(selectedElement.classList[1], cases, 'white', selectedElement.classList[3])
+                    check('black')
+                    legalMove(selectedElement.classList[1], cases, 'white', selectedElement.classList[3], false)
                 }
                 let possibleMove = document.querySelectorAll('.possibleMove')
                 elementTemp = []

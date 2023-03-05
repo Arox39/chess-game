@@ -18,11 +18,13 @@ let rowColToCasee = (row, col) =>{
 
 
 
-let legalMove = (casee, cases, color, piece) => {
-    // enlevage des possibles mouvements
-    cases.forEach(element => {
-        element.classList.remove('possibleMove')
-    })
+let legalMove = (casee, cases, color, piece, all) => {
+    if (!all){
+        // enlevage des possibles mouvements
+        cases.forEach(element => {
+            element.classList.remove('possibleMove')
+        })
+    }
     let { row, col } = caseeToRowCol(casee)
     let moves = []
 
@@ -30,7 +32,6 @@ let legalMove = (casee, cases, color, piece) => {
     let possibleMoveForWhitePawns = (row, col) => {
     
         let select = (casee) => document.querySelector(`.${casee}`)
-        console.log('here');
         
         if(row + 1 <= 8 && select(rowColToCasee(row + 1, col)).classList[2] === 'free'){
             moves.push([rowColToCasee(row + 1, col)])
