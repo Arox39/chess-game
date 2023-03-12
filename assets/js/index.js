@@ -1,0 +1,2 @@
+initalization()
+move('black')
