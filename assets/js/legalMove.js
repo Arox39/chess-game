@@ -325,11 +325,11 @@ let legalMove = (casee, cases, color, piece, all) => {
             moves.push([rowColToCasee(row - 2, col)])
             select(rowColToCasee(row - 2, col)).classList.add('possibleMove')
         }
-        if(col - 1 >= 1 && select(rowColToCasee(row - 1, col - 1)).classList[2] === 'whiteOccupied'){
+        if(col - 1 >= 1 && row - 1 >= 1 && select(rowColToCasee(row - 1, col - 1)).classList[2] === 'whiteOccupied'){
             moves.push([rowColToCasee(row - 1, col - 1)])
             select(rowColToCasee(row - 1, col - 1)).classList.add('possibleMove')
         }
-        if(col + 1 <= 8 && select(rowColToCasee(row - 1, col + 1)).classList[2] === 'whiteOccupied'){
+        if(col + 1 <= 8 && row - 1 >= 1 && select(rowColToCasee(row - 1, col + 1)).classList[2] === 'whiteOccupied'){
             moves.push([rowColToCasee(row - 1, col + 1)])
             select(rowColToCasee(row - 1, col + 1)).classList.add('possibleMove')
         }

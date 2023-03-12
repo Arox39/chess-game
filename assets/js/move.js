@@ -16,12 +16,10 @@ let move = (color) => {
                     // Si c'est le cas, cet élément est considéré comme la pièce sélectionnée pour le déplacement
                     selectedElement = elementOccupied
                     verification(cases)
-                    check(color)
                     clouage(selectedElement, cases, color)
                 }
                 let possibleMove = document.querySelectorAll('.possibleMove')
                 elementTemp = []
-                paramStorage.push(occupiedElement, color)
                 possibleMove.forEach(possibleElement => {
                     elementTemp.push(possibleElement)
                     possibleElement.addEventListener('click', possibleElementClickHandler)
@@ -53,12 +51,12 @@ let move = (color) => {
             if (color === 'white'){
                 wOccupied = document.querySelectorAll('.whiteOccupied')
                 console.log(possibleMove);
-                check(color)
+                check(color, false)
                 listenerOccupiedElements(wOccupied, 'white')
             }
             else if (color === 'black'){
                 bOccupied = document.querySelectorAll('.blackOccupied')
-                check(color)
+                check(color, false)
                 listenerOccupiedElements(bOccupied, 'black')
             }
         }
@@ -68,7 +66,6 @@ let move = (color) => {
     
     let selectedElement = null
     let elementTemp = []
-    let paramStorage = []
     if (color === 'white'){
         listenerOccupiedElements(wOccupied, color)
     }
